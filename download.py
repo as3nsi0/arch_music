@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 """
+This application allow us download the music from the youtube videos
 Esta función permite  descargar la musica de los videos de Youtube
 
-Output: Una carpeta Music que incluye todas las canciones en formato .mp3
-Input: La entrada es un simple texto con links separados por saltos de línea
+Output: A target directory where you save the songs in .mp3
+Input: The output is a simple txt with the youtube links separate with line escapes
 
 @author: Victor
 
 
-Requisitos de terceros: Necesita AVbin y ffmpeg
+Third parties: You required AVbin and ffmpeg
 """
 
 import os
@@ -32,7 +33,7 @@ def download_videos(link, index):
         else:
             audio.download(name_song+'.ogg')
     except:
-        print('La cancion con titulo: ' + name_song + ' no ha podido descargarse.\n')
+        print("The song with the nex title: " + name_song + " has a problem to download.\n")
         name_song = ''
     return name_song
 
@@ -68,14 +69,14 @@ for link in lines:
     name_video = download_videos(link, index)
     if(name_video != ''):
         list_of_names[name_video+'.ogg'] = name_video
-    print('El video '+name_video+' se ha descargado con exito.\n')
+    print('The video '+name_video+' was success download.\n')
     index+=1
     
 list_of_files_remove = []
 
 
 for key in list_of_names.keys():
-    print('\n\nProcesando\n\n')
+    print('\n\nProcessed\n\n')
     # Eliminamos los simbolos que pueden causar problemas
     final_name = list_of_names[key]#.replace(' ', '_').replace('.','_').replace('&', 'and')
     format_conversion(key, final_name)
