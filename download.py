@@ -1,0 +1,85 @@
+# -*- coding: utf-8 -*-
+"""
+Esta función permite  descargar la musica de los videos de Youtube
+
+Output: Una carpeta Music que incluye todas las canciones en formato .mp3
+Input: La entrada es un simple texto con links separados por saltos de línea
+
+@author: Victor
+
+
+Requisitos de terceros: Necesita AVbin y ffmpeg
+"""
+
+import os
+import ffmpy
+import pafy
+import shutil
+
+# Esto nos permite descargar el video y el indice nos dice el que tenemos que descargar
+def download_videos(link, index):
+    try:
+        v = pafy.new(link)
+        name_song = v.title
+        #v.getbestaudio().download()
+        audio = ''
+        for name in v.audiostreams:
+            if('ogg' in str(name)):
+                audio = name
+                break
+        if(audio == ''):
+            v.getbestaudio().download()
+        else:
+            audio.download(name_song+'.ogg')
+    except:
+        print('La cancion con titulo: ' + name_song + ' no ha podido descargarse.\n')
+        name_song = ''
+    return name_song
+
+def format_conversion(name, name_final, format='mp3'):
+    try:
+        ff = ffmpy.FFmpeg(inputs = {name:None},outputs = {name_final+'.'+format:None})
+        ff.run()
+    except:
+        print('Ha fallado la conversión de '+name+ ' a ' + name_final)
+    #cmd_call = 'ffmpeg -i '+name+' -acodec libmp3lame '+name_final+'.'+format
+    #os.system(cmd_call)
+
+output = 'Music/'
+if(os.path.exists(output)):
+    shutil.rmtree(output)
+os.mkdir('Music')
+f = open('test.txt','r')  
+os.chdir(output) 
+index = 1
+lines = f.readlines()
+f.close()
+total_index = len(lines)
+current_directory = os.getcwd()
+
+
+list_of_names = {}
+
+
+for link in lines:
+    new_links = link.split('\n')
+    link = new_links[0]
+    print('\nYou are downloading ' + str(index) + ' of ' +  str(total_index) + '\n\n')
+    name_video = download_videos(link, index)
+    if(name_video != ''):
+        list_of_names[name_video+'.ogg'] = name_video
+    print('El video '+name_video+' se ha descargado con exito.\n')
+    index+=1
+    
+list_of_files_remove = []
+
+
+for key in list_of_names.keys():
+    print('\n\nProcesando\n\n')
+    # Eliminamos los simbolos que pueden causar problemas
+    final_name = list_of_names[key]#.replace(' ', '_').replace('.','_').replace('&', 'and')
+    format_conversion(key, final_name)
+    list_of_files_remove.append(key)
+    
+for i in range(len(list_of_files_remove)):
+    os.remove(list_of_files_remove[i])
