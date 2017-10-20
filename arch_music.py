@@ -17,7 +17,7 @@ import ffmpy
 import pafy
 import shutil
 
-# Esto nos permite descargar el video y el indice nos dice el que tenemos que descargar
+# This allow us to download the video and the index to download
 def download_videos(link, index):
     try:
         v = pafy.new(link)
@@ -37,6 +37,7 @@ def download_videos(link, index):
         name_song = ''
     return name_song
 
+# This function allow us to change music format
 def format_conversion(name, name_final, format='mp3'):
     try:
         ff = ffmpy.FFmpeg(inputs = {name:None},outputs = {name_final+'.'+format:None})
@@ -61,7 +62,6 @@ current_directory = os.getcwd()
 
 list_of_names = {}
 
-
 for link in lines:
     new_links = link.split('\n')
     link = new_links[0]
@@ -73,7 +73,6 @@ for link in lines:
     index+=1
     
 list_of_files_remove = []
-
 
 for key in list_of_names.keys():
     print('\n\nProcessed\n\n')

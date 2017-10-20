@@ -1,0 +1,2 @@
+Next Updates:
+- Improve the path directories system, extract with the config.ini
